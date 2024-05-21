@@ -7,7 +7,7 @@ var email = document.querySelector("#inputEmail");
 var emailHelp = document.querySelector("#inputEmailHelp");
 var senha = document.querySelector("#inputPassword");
 var senhaHelp = document.querySelector("#inputPasswordHelp");
-var mensagem = document.queryselector(#inputResult)
+var mensagem = document.queryselector("#inputResult");
 document.querySelector("form").appendChild(mensagem);
 
 // Event listeners para os campos do form
