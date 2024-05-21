@@ -7,26 +7,14 @@ var email = document.querySelector("#inputEmail");
 var emailHelp = document.querySelector("#inputEmailHelp");
 var senha = document.querySelector("#inputPassword");
 var senhaHelp = document.querySelector("#inputPasswordHelp");
-var mensagem = document.queryselector("#inputResult");
-document.querySelector("form").appendChild(mensagem);
+var result = document.querySelector('#inputResult')
 
 // Event listeners para os campos do form
-nome.addEventListener('focusout', function(e) {
-    validarNome(e);
-    validarFormulario();
-});
-ano.addEventListener('focusout', function() {
-    validarAno();
-    validarFormulario();
-});
-email.addEventListener('focusout', function() {
-    validarEmail();
-    validarFormulario();
-});
-senha.addEventListener('focusout', function() {
-    validarSenha();
-    validarFormulario();
-});
+nome.addEventListener('focusout', validarNome);
+ano.addEventListener('focusout', validarAno);
+email.addEventListener('focusout', validarEmail);
+senha.addEventListener('focusout', validarSenha);
+
 
 // Função para validar Nome
 function validarNome(e) {
@@ -37,6 +25,7 @@ function validarNome(e) {
     } else {
         nomeHelp.textContent = "";
     }
+
 }
 
 // Função para validar Ano
@@ -46,7 +35,7 @@ function validarAno() {
     if (!anoTrimado.match(regexAno)) {
         anoHelp.textContent = "Formato de ano inválido";
         anoHelp.style.color = "red";
-    } else {
+    } else {        
         if (parseInt(anoTrimado) > 2022) {
             anoHelp.textContent = `Ano inválido. O ano não pode ser maior que ${2022}.`;
             anoHelp.style.color = "red";
@@ -68,6 +57,7 @@ function validarEmail() {
     } else {
         emailHelp.textContent = "";
     }
+
 }
 
 // Função para validar Senha
@@ -78,7 +68,7 @@ function validarSenha() {
     const anoValor = ano.value.trim();
     const senhaValorMinuscula = senhaValor.toLowerCase();
     
-    if (!senhaValor.match(regexSenha) || senhaValor.includes(nomeValor.toLowerCase()) || senhaValor.includes(anoValor) || senhaValor.includes(nomeValor.toUpperCase()) || senhaValor.includes(nomeValor) || senhaValorMinuscula.includes(nomeValor.toLowerCase())) {
+    if (!senhaValor.match(regexSenha) || senhaValor.includes(nomeValor.toLowerCase()) || senhaValor.includes(anoValor) || senhaValor.includes(nomeValor.toUpperCase()) || senhaValor.includes(nomeValor)  || senhaValorMinuscula.includes(nomeValor.toLowerCase()) ) {
         senhaHelp.textContent = "Senha inválida";
         senhaHelp.style.color = "red";
     } else {
@@ -86,6 +76,9 @@ function validarSenha() {
         senhaHelp.textContent = `Força da senha: ${forcaSenha}`;
         senhaHelp.style.color = "green";
     }
+
+    verificarFormulario();
+
 }
 
 // Função para calcular a força da senha
@@ -104,36 +97,19 @@ function calcularForcaSenha(senha) {
     } else {
         return "inválida";
     }
+
 }
 
-// Função para validar todo o formulário
-function validarFormulario() {
-    const camposValidos = [
-        validarCampo(nome, nomeHelp, /^[A-Za-z]{6,}$/),
-        validarCampo(ano, anoHelp, /^[0-9]{4}$/) && ano.value.trim() >= 1900 && ano.value.trim() <= 2022,
-        validarCampo(email, emailHelp, /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.(br|com|net|org)$/),
-        validarCampoSenha()
-    ];
-
-    if (camposValidos.every(Boolean)) {
-        mensagem.textContent = "Seus dados foram registrados";
-        mensagem.style.color = "green";
+// Função para verificar se todos os campos do formulário são válidos
+function verificarFormulario() {
+    if (nomeHelp.textContent === "" &&
+        anoHelp.textContent === "" &&
+        emailHelp.textContent === "" &&
+        senhaHelp.textContent.startsWith("Força da senha")) {
+        result.textContent = "Seus dados foram registrados com sucesso :)";
+        result.style.color = "green";
     } else {
-        mensagem.textContent = "Seus dados não foram registrados";
-        mensagem.style.color = "red";
+        result.textContent = "Seus dados não foram registrados :(";
+        result.style.color = "red";
     }
-}
-
-function validarCampo(campo, helpElement, regex) {
-    return campo.value.trim().match(regex) && !helpElement.textContent;
-}
-
-function validarCampoSenha() {
-    const regexSenha = /^(?=.*[!@#%&+])(?=.*\d)(?=.*[a-zA-Z]).{6,20}$/;
-    const senhaValor = senha.value.trim();
-    const nomeValor = nome.value.trim();
-    const anoValor = ano.value.trim();
-    const senhaValorMinuscula = senhaValor.toLowerCase();
-
-    return senhaValor.match(regexSenha) && !senhaValor.includes(nomeValor.toLowerCase()) && !senhaValor.includes(anoValor) && !senhaValor.includes(nomeValor.toUpperCase()) && !senhaValor.includes(nomeValor) && !senhaValorMinuscula.includes(nomeValor.toLowerCase());
 }
